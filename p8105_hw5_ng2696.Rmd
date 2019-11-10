@@ -10,6 +10,7 @@ library(tidyverse)
 library(viridis)
 library(rvest)
 library(stringr)
+library(purrr)
 knitr::opts_chunk$set(
 	echo = TRUE,
 	warning = FALSE,
@@ -66,13 +67,13 @@ Tidy the result; manipulate file names to include control arm and subject ID, ma
 Make a spaghetti plot showing observations on each subject over time, and comment on differences between group
 
 ```{r}
+#create vector of filenames
 files_vec=list.files(path = "./data", full.names = TRUE) 
-df= data_frame(filename=files_vec, subject_ID=str_sub(files_vec,-6,-5), arm=str_sub(files_vec,-10,-8))
-read_and_label=function(files) {filename=files
-file_contents=read.csv(files)}
-files_vec %>%
-  map(read_and_label) 
-  
+#create dataframe of filenames, subjectID, arm
+data_frame(filename=files_vec, subject_ID=str_sub(files_vec,-6,-5), arm=str_sub(files_vec,-10,-8)) %>%
+  mutate(file_contents = map(filename,read.csv)
+  ) %>%
+  unnest(file_contents)
  
 
 ```
