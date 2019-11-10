@@ -36,17 +36,16 @@ iris_with_missing = iris %>%
   map_df(~replace(.x, sample(1:150, 20), NA)) %>%
   mutate(Species = as.character(Species))
 
-replace_missing = function(original_value) {
-  if ((is.numeric(original_value)) & (is.na(original_value))) 
-   {new_value=mean(original_value)}
-  else if ((is.character(original_value)) & (is.na(original_value)))
-    {new_value="virginica"}
-  else {new_value=original_value}
-  new_value
+replace_missing = function(original_values) {
+  if (is.numeric(original_values))
+   {new_values=replace_na(original_values, mean(original_values,na.rm = TRUE))}
+  else 
+  {new_values=replace_na(original_values, "virginica")}
+  new_values
 }
 
-test_df = replace_missing(iris_with_missing)
-test_df
+test_vec = replace_missing(iris_with_missing$Petal.Length)
+test_vec
 
 ```
 
