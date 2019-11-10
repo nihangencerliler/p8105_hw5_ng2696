@@ -8,8 +8,8 @@ output: github_document
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(viridis)
-library(readxl)
-library(patchwork)
+library(rvest)
+library(stringr)
 knitr::opts_chunk$set(
 	echo = TRUE,
 	warning = FALSE,
@@ -44,11 +44,37 @@ replace_missing = function(original_values) {
   new_values
 }
 
-test_vec = replace_missing(iris_with_missing$Petal.Length)
-test_vec
+iris_without_missing = map_dfr(iris_with_missing, replace_missing)
+
+head(iris_without_missing)
 
 ```
 
 For numeric variables, you should fill in missing values with the mean of non-missing values
 For character variables, you should fill in missing values with "virginica"
+
+## Problem 2
+
+This zip file contains data from a longitudinal study that included a control arm and an experimental arm. Data for each participant is included in a separate file, and file names include the subject ID and arm.
+
+Create a tidy dataframe containing data from all participants, including the subject ID, arm, and observations over time:
+
+subject ID   arm   observations   time
+Start with a dataframe containing all file names; the list.files function will help
+Iterate over file names and read in data for each subject using purrr::map and saving the result as a new variable in the dataframe
+Tidy the result; manipulate file names to include control arm and subject ID, make sure weekly observations are “tidy”, and do any other tidying that’s necessary
+Make a spaghetti plot showing observations on each subject over time, and comment on differences between group
+
+```{r}
+files_vec=list.files(path = "./data", full.names = TRUE) 
+df= data_frame(filename=files_vec, subject_ID=str_sub(files_vec,-6,-5), arm=str_sub(files_vec,-10,-8))
+read_and_label=function(files) {filename=files
+file_contents=read.csv(files)}
+files_vec %>%
+  map(read_and_label) 
+  
+ 
+
+```
+
 
